@@ -172,6 +172,18 @@ class CreditCardsController < ApplicationController
       renderError("Not Found", 404, "The resource does not exist")
     end
   end
+
+  def user
+    if(params[:q])
+      user=params[:q]
+      credit_card = CreditCard.credit_cards_by_user_id(user.to_i)
+      render json: credit_card
+    else
+      render status: 400,json: {
+        message: "User param(q) missing"
+        }
+    end
+  end
   # DELETE /credit_cards/1
   #def destroy
   #  @credit_card.destroy

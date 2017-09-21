@@ -10,20 +10,20 @@ class CreditCard < ApplicationRecord
   validates :expiration_year, numericality: {:greater_than => 2017, :less_than => 2100, message: "Invalid year"}
 
   #validates :number, numericality: {:greater_than => 99999999999999, :less_than => 10000000000000000000, message: "Must have at least 15 digits and lest than 20"}
+
   #def self.load_credit_cards(page = 1, per_page = 10)
-  #  paginate(:page => page, :per_page => per_page)
+  #  includes()
+  #    .paginate(:page => page, :per_page => per_page)
   #end
   #def self.credit_cards_by_id(id,columns)
   #  columns=columns ? columns+",credit_cards.*"
   #  .select(columns)
   #    .find_by_id(id)
   #end
-  #def self.credit_cards_by_user_id(user)
-  #  columns=columns ? columns+"credit_cards.*"
-    #load_credit_cards(page,per_page)
-  #  .select(columns)
-  #    .where('credit_cards.user_id = ?', user)
-  #end
+  def self.credit_cards_by_user_id(user)
+    #CreditCard.find_by user_id: user
+    CreditCard.all.where(user_id: user.to_i)
+  end
   #def self.credit_cards_by_number(number)
   #  columns=columns ? columns+"credit_cards.*"
     #load_credit_cards(page,per_page)
