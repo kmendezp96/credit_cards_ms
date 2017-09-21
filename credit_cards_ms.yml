@@ -1,0 +1,199 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Credit cards Microservice
+  description: Ruby + MySQL Database
+  license:
+    name: Software Architecture 2017-II
+host: '192.168.99.102:3003'
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /credit_cards:
+    post:
+      summary: Creates a new credit card
+      operationId: createCreditCards
+      parameters:
+        - name: creditCard
+          in: body
+          required: true
+          description: creditCard Object
+          schema:
+            $ref: '#/definitions/CreditCard'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      summary: Returns all credit cards
+      operationId: getAllcreateCreditCards
+      parameters:
+        - name: firstResult
+          in: query
+          description: The first result to return
+          required: false
+          type: integer
+        - name: maxResult
+          in: query
+          description: The maximum number of results to return
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/CreditCardList'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  '/CreditCard/{id}':
+    get:
+      summary: Returns a credit card with the given id
+      operationId: getCreditCardById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the credit card to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/CreditCard'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    put:
+      summary: Updates a credit Card with the given id
+      operationId: updateCreditCard
+      parameters:
+        - name: id
+          in: path
+          description: The id of the credit Card to be updated
+          required: true
+          type: string
+        - name: product
+          in: body
+          required: true
+          description: CreditCard Object
+          schema:
+            $ref: '#/definitions/CreditCardWithoutId'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    delete:
+      summary: Deletes a Credit Card with the given id
+      operationId: deleteCreditCard
+      parameters:
+        - name: id
+          in: path
+          description: The id of the Credit Card to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+definitions:
+  CreditCard:
+    type: object
+    properties:
+      id:
+        type: integer
+      number:
+        type: string
+      amount:
+        type: integer
+      expiration_month:
+        type: integer
+      expiration_year:
+        type: integer
+      user_id:
+        type: integer
+  CreditCardWithoutId:
+    type: object
+    properties:
+      number:
+        type: string
+      amount:
+        type: integer
+      expiration_month:
+        type: integer
+      expiration_year:
+        type: integer
+      user_id:
+        type: integer
+  CreditCardList:
+    type: object
+    required:
+      - total
+      - list
+    properties:
+      total:
+        type: number
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/CreditCard'
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
+      code:
+        type: number
+      description:
+        type: object

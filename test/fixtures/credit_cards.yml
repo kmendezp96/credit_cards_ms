@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: 1
+  country: MyString
+  amount: 1
+  expiration_month: 1
+  expiration_year: 1
+  type: 
+  user_id: 1
+
+two:
+  number: 1
+  country: MyString
+  amount: 1
+  expiration_month: 1
+  expiration_year: 1
+  type: 
+  user_id: 1

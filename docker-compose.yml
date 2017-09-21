@@ -1,0 +1,19 @@
+version: '2'
+services:
+  credit_cards_db:
+    image: mysql
+    ports:
+    - "3308:3308"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_USER: arqsoft
+      MYSQL_PASSWORD: 123
+      MYSQL_DATABASE: credit_cards
+      MYSQL_HOST: credit_cards_db
+  credit_cards_ms:
+    build: .
+    command: bash -c "sleep 40 && rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3003 -b '0.0.0.0'"
+    ports:
+      - "3003:3003"
+    depends_on:
+      - credit_cards_db
