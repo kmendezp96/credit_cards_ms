@@ -1,5 +1,5 @@
 class CreditCardsController < ApplicationController
-  before_action :set_product, only: [:show, :update, :destroy]
+  before_action :set_credit_card, only: [:show, :update, :destroy]
 
   def renderError(message, code, description)
     render status: code,json: {
@@ -54,8 +54,8 @@ class CreditCardsController < ApplicationController
       renderError("Not Acceptable (Invalid Params)", 406, "The parameter id is not an integer")
       return -1
     end
-    if(@credit_cards)
-      render json: @credit_cards
+    if(@credit_card)
+      render json: @credit_card
     else
       renderError("Not Found", 404, "The resource does not exist")
     end
@@ -109,7 +109,15 @@ class CreditCardsController < ApplicationController
       return -1
     end
     if(@credit_card)
-      ##
+      if (!params[:number]) && ( !params[:user_id])
+        if @credit_card.update(credit_card_params)
+          head 204
+        else
+          render json: @credit_card.errors, status: :unprocessable_entity
+        end
+      else
+        renderResponse("Not acceptable",406,"Only expiration_month and expiration_year can be updated")
+      end
     else
       renderError("Not Found", 404, "The resource does not exist")
       return -1
@@ -120,35 +128,6 @@ class CreditCardsController < ApplicationController
     #    return -1
     #  end
     #end
-    if(params[:amount])
-      if !(Integer(params[:amount]) rescue false)
-        renderError("Not Acceptable (Invalid Params)", 406, "The parameter amount is not an Integer")
-        return -1
-      end
-    end
-    if(params[:expiration_month])
-      if !(Integer(params[:expiration_month]) rescue false)
-        renderError("Not Acceptable (Invalid Params)", 406, "The parameter expiration_month is not an Integer")
-        return -1
-      end
-    end
-    if(params[:expiration_year])
-      if !(Integer(params[:expiration_year]) rescue false)
-        renderError("Not Acceptable (Invalid Params)", 406, "The parameter expiration_year is not an Integer")
-        return -1
-      end
-    end
-    if(params[:user_id])
-      if !(Integer(params[:user_id]) rescue false)
-        renderError("Not Acceptable (Invalid Params)", 406, "The parameter user_id is not an Integer")
-        return -1
-      end
-    end
-    if @credit_card.update(credit_card_params)
-      head 204
-    else
-      render json: @@credit_card.errors, status: :unprocessable_entity
-    end
   end
 
   # PATCH/PUT /credit_cards/1
@@ -193,7 +172,8 @@ class CreditCardsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_credit_card
-      @credit_card = CreditCard.find_by_id(params[:id])
+      @credit_card = CreditCard.find(params[:id])
+      puts (@credit_card)
     end
 
     # Only allow a trusted parameter "white list" through.
