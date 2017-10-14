@@ -153,8 +153,8 @@ class CreditCardsController < ApplicationController
   end
 
   def user
-    if(params[:q])
-      user=params[:q]
+    if(params[:id])
+      user=params[:id]
       credit_card = CreditCard.credit_cards_by_user_id(user.to_i)
       render json: credit_card
     else
